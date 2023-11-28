@@ -1,3 +1,5 @@
+const port = 3001
+
 const express = require('express');
 const cors = require('cors');
 
@@ -15,7 +17,7 @@ const Kitchen = require('./models/Kitchen');
 const Product = require('./models/Product');
 
 // CORS
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: true, origin: `http://localhost:${port}` }));
 
 // routes
 const CustomerRoute = require('./routes/CustomerRoute');
@@ -23,14 +25,9 @@ const CustomerController = require('./controllers/CustomerController');
 
 app.use('/', CustomerRoute);
 
-// 404
-app.use((req, res, next) => {
-  res.status(404).json({ message: 'Page not found' });
-});
-
 // server
 conn
     // .sync({ force: true })
     .sync()
-    .then(() => app.listen(3001, console.log('> Server on: http://localhost:3000')))
+    .then(() => app.listen(port, console.log(`> Server on: http://localhost:${port}`)))
     .catch((err) => console.log(`Sync Error: ${err}`));

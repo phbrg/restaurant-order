@@ -31,5 +31,5 @@ module.exports = class CustomerController {
                 createCustomerToken(customer, req, res);
             })
             .catch((err) => console.log(`Customer register error: ${err}`));
-    } 
+    }
 }
