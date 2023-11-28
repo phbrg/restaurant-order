@@ -16,14 +16,17 @@ const Customer = require('./models/Customer');
 const Kitchen = require('./models/Kitchen');
 const Product = require('./models/Product');
 
-// CORS
+// cors
 app.use(cors({ credentials: true, origin: `http://localhost:${port}` }));
 
 // routes
 const CustomerRoute = require('./routes/CustomerRoute');
 const CustomerController = require('./controllers/CustomerController');
+const KitchenRoute = require('./routes/KitchenRoute');
+const KitchenController = require('./controllers/KitchenController');
 
 app.use('/', CustomerRoute);
+app.use('/kitchen', KitchenRoute);
 
 // server
 conn

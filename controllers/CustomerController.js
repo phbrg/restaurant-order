@@ -1,11 +1,6 @@
 const Customer = require('../models/Customer');
 
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
 const createCustomerToken = require('../helpers/createCustomerToken');
-const getToken = require('../helpers/getToken');
-const getCustomerByToken = require('../helpers/getCustomerByToken');
 
 module.exports = class CustomerController {
     static async register(req, res) {
