@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db/conn');
 
-const Cart = require('./Cart');
+const Order = require('./Order');
 
 const Kitchen = db.define('Kitchen', {
     order: {
@@ -14,7 +14,7 @@ const Kitchen = db.define('Kitchen', {
     }
 });
 
-Kitchen.belongsTo(Cart);
-Cart.hasOne(Kitchen);
+Kitchen.belongsTo(Order);
+Order.hasOne(Kitchen);
 
 module.exports = Kitchen;
