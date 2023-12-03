@@ -17,7 +17,7 @@ const Kitchen = require('./models/Kitchen');
 const Product = require('./models/Product');
 
 // cors
-app.use(cors({ credentials: true, origin: `http://localhost:${port}` }));
+app.use(cors({ credentials: true }));
 
 // routes
 const CustomerRoute = require('./routes/CustomerRoute');

@@ -9,6 +9,10 @@ const Order = db.define('Order', {
     price: {
       type: DataTypes.FLOAT,
       allowNull: false
+    },
+    delivered: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
 });
 

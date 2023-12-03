@@ -9,8 +9,8 @@ const Kitchen = db.define('Kitchen', {
         allowNull: false
     },
     status: {
-      type: DataTypes.STRING,
-      defaultValue: 'Preparando pedido.'
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
 });
 
