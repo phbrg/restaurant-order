@@ -14,9 +14,21 @@ module.exports = class CustomerController {
             return;
         }
 
-        if(parseFloat(table) < 0 || parseFloat(table) > 20) {
+        if(parseFloat(table) < 0 || parseFloat(table) > 1000) {
           res.status(422).json({ message: 'Invalid table' });
           return;
+        }
+
+        const invalidTable = await Customer.findAll({ raw: true, where: { table: parseFloat(table) } });
+        try {
+            invalidTable.forEach(elm => {
+                if(!elm.exitDate) {
+                    throw new Error('Table is currently in use');
+                }
+            })
+        } catch(err) {
+            res.status(400).json({ message: err.message });
+            return;
         }
 
         const customer = {
@@ -42,12 +54,15 @@ module.exports = class CustomerController {
         let price = 0;
 
         async function processOrders() {
-            for (const id of order) {
-              const orderExist = await Product.findOne({ raw: true, where: { id: parseFloat(id) } });
+            for (const obj of order) {
+              let orderExist = await Product.findOne({ raw: true, where: { id: parseFloat(obj.id) } });
 
               if(!orderExist) {
-                res.status(404).json({ message: 'Invalid product' });
-                return;
+                throw new Error('Invalid product');
+              }
+
+              if(obj.notes) {
+                orderExist['note'] = obj.notes;
               }
 
               products.push(orderExist);
@@ -55,7 +70,12 @@ module.exports = class CustomerController {
             }
         }
 
-        await processOrders();
+        try {
+            await processOrders();
+        } catch (err) {
+            res.status(404).json({ message: err.message });
+            return;
+        }
 
         const finalOrder = {
             products,

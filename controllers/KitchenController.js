@@ -8,7 +8,7 @@ module.exports = class KitchenController {
     static async registerProduct(req, res) {
         const { name, description, category, price, password  } = req.body;
 
-        if(parseFloat(password) !== parseFloat(process.env.ADMIN_PASSWORD)) {
+        if(password !== process.env.ADMIN_PASSWORD) {
           res.status(404).json({ message: 'You are not allowed here!' });
           return;
         }
@@ -45,7 +45,7 @@ module.exports = class KitchenController {
       const productName = req.params.name;
       const { name, description, category, price, avaliable, promo, password  } = req.body;
 
-      if(parseFloat(password) !== parseFloat(process.env.ADMIN_PASSWORD)) {
+      if(password !== process.env.ADMIN_PASSWORD) {
         res.status(404).json({ message: 'You are not allowed here!' });
         return;
       }
@@ -76,7 +76,7 @@ module.exports = class KitchenController {
       const name = req.params.name;
       const password = req.body.password;
 
-      if(parseFloat(password) !== parseFloat(process.env.ADMIN_PASSWORD)) {
+      if(password !== process.env.ADMIN_PASSWORD) {
         res.status(404).json({ message: 'You are not allowed here!' });
         return;
       }
@@ -117,5 +117,18 @@ module.exports = class KitchenController {
             .catch(err => console.log(`Order update error: ${err}`));
         })
         .catch(err => console.log(`Kitchen update error: ${err}`));
+    }
+
+    static async getProduct(req, res) {
+      const productId = req.params.id;
+
+      const product = await Product.findOne({ raw: true, where: { id: productId } });
+
+      if(!product) {
+        res.status(404).json({ message: 'Invalid product' });
+        return;
+      }
+
+      res.status(200).json({ message: product });
     }
 }
