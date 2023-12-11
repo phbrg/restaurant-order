@@ -4,6 +4,8 @@ const Order = require('../models/Order');
 const Kitchen = require('../models/Kitchen');
 
 const createCustomerToken = require('../helpers/createCustomerToken');
+const getToken = require('../helpers/getToken');
+const getCustomerByToken = require('../helpers/getCustomerByToken');
 
 module.exports = class CustomerController {
     static async register(req, res) {
@@ -53,6 +55,9 @@ module.exports = class CustomerController {
         let products = [];
         let price = 0;
 
+        const customerToken = getToken(req);
+        const customer = await getCustomerByToken(customerToken);
+
         async function processOrders() {
             for (const obj of order) {
               let orderExist = await Product.findOne({ raw: true, where: { id: parseFloat(obj.id) } });
@@ -79,7 +84,8 @@ module.exports = class CustomerController {
 
         const finalOrder = {
             products,
-            price
+            price,
+            CustomerId: customer.id
         }
 
         await Order.create(finalOrder)
@@ -91,5 +97,30 @@ module.exports = class CustomerController {
                     .catch(err => console.log(`Create kitchen order error: ${err}`));
             })
             .catch(err => console.log(`Create order error: ${err}`));
+    }
+
+    static async checkOut(req, res) {
+        const customerToken = getToken(req);
+        const customer = await getCustomerByToken(customerToken);
+
+        const order = await Order.findAll({ raw: true, where: { CustomerId: customer.id } });
+
+        if(!order) {
+            res.status(200).json({ message: `You didn't order anything, you have nothing to pay nothing.` });
+            return;
+        }
+
+        let finalPrice = 0;
+        let products = []
+
+        order.map((order) => {
+            finalPrice = finalPrice + order.price;
+            order.products.map((product) => {
+                products.push({ name: product.name, price: product.price });
+            });
+        });
+
+        res.status(200).json({ message: `Thank you for being our client! | Your total is: ${finalPrice}`, products: products });
+        Customer.update({exitDate: new Date()}, { where: { id: customer.id } });
     }
 }

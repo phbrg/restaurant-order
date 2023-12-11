@@ -7,6 +7,7 @@ require('dotenv').config();
 module.exports = class KitchenController {
     static async registerProduct(req, res) {
         const { name, description, category, price, password  } = req.body;
+        const picture = req.file.path || null;
 
         if(password !== process.env.ADMIN_PASSWORD) {
           res.status(404).json({ message: 'You are not allowed here!' });
@@ -31,7 +32,8 @@ module.exports = class KitchenController {
             category,
             avaliable: true,
             price,
-            promo: 0
+            promo: 0,
+            picture
         }
 
         Product.create(product)

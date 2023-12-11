@@ -11,7 +11,7 @@ const Customer = db.define('Customer', {
         allowNull: false
     },
     exitDate: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DATE,
         allowNull: true
     },
 });

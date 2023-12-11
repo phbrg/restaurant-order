@@ -30,7 +30,7 @@ app.use('/kitchen', KitchenRoute);
 
 // server
 conn
-    // .sync({ force: true })
+    //.sync({ force: true })
     .sync()
     .then(() => app.listen(port, console.log(`> Server on: http://localhost:${port}`)))
     .catch((err) => console.log(`Sync Error: ${err}`));

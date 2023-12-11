@@ -9,4 +9,6 @@ router.post('/registerorder', authCustomer, CustomerController.order);
 
 router.get('/menu', authCustomer, CustomerController.menu);
 
+router.put('/checkout', authCustomer, CustomerController.checkOut);
+
 module.exports = router;

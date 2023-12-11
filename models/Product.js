@@ -26,6 +26,10 @@ const Product = db.define('Product', {
         type: DataTypes.FLOAT,
         allowNull: true
     },
+    picture: {
+        type: DataTypes.STRING,
+        allowNull: true
+    }
 });
 
 module.exports = Product;

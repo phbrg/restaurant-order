@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const KitchenController = require('../controllers/KitchenController');
 
-router.post('/registerproduct', KitchenController.registerProduct);
+const upload = require('../helpers/upload');
+
+router.post('/registerproduct', upload.single('picture'), KitchenController.registerProduct);
 router.post('/editproduct/:name', KitchenController.editProduct);
 
 router.delete('/deleteproduct/:name', KitchenController.deleteProduct);

@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db/conn');
 
+const Customer = require('./Customer');
+
 const Order = db.define('Order', {
     products: {
         type: DataTypes.ARRAY(DataTypes.JSONB),
@@ -15,5 +17,8 @@ const Order = db.define('Order', {
       defaultValue: false
     }
 });
+
+Order.belongsTo(Customer);
+Customer.hasMany(Order);
 
 module.exports = Order;
