@@ -75,7 +75,7 @@ module.exports = class KitchenController {
     }
 
     static async deleteProduct(req, res) {
-      const name = req.params.name;
+      const id = req.params.id;
       const password = req.body.password;
 
       if(password !== process.env.ADMIN_PASSWORD) {
@@ -83,14 +83,14 @@ module.exports = class KitchenController {
         return;
       }
 
-      const productExist = await Product.findOne({ where: { name: name.toLowerCase() } });
+      const productExist = await Product.findOne({ where: { id: parseFloat(id) } });
 
       if(!productExist) {
         res.status(404).json({ message: 'Product not found' });
         return;
       }
 
-      Product.destroy({ where: { name: name.toLowerCase() } })
+      Product.destroy({ where: { id: parseFloat(id) } })
         .then(() => res.status(200).json({ message: 'Product successfully deleted!' }))
         .catch(err => console.log(`Product delete error: ${err}`));
     }

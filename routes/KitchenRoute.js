@@ -6,7 +6,7 @@ const upload = require('../helpers/upload');
 router.post('/registerproduct', upload.single('picture'), KitchenController.registerProduct);
 router.post('/editproduct/:name', KitchenController.editProduct);
 
-router.delete('/deleteproduct/:name', KitchenController.deleteProduct);
+router.delete('/deleteproduct/:id', KitchenController.deleteProduct);
 
 router.get('/orders', KitchenController.orders);
 router.get('/product/:id', KitchenController.getProduct);
