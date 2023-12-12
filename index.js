@@ -26,7 +26,7 @@ const KitchenRoute = require('./routes/KitchenRoute');
 const KitchenController = require('./controllers/KitchenController');
 
 app.use('/', CustomerRoute);
-app.use('/kitchen', KitchenRoute);
+app.use('/k', KitchenRoute);
 
 // server
 conn
