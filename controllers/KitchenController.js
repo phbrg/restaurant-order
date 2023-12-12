@@ -1,5 +1,4 @@
 const Product = require('../models/Product');
-const Kitchen = require('../models/Kitchen');
 const Order = require('../models/Order');
 
 require('dotenv').config();
@@ -7,7 +6,7 @@ require('dotenv').config();
 module.exports = class KitchenController {
     static async registerProduct(req, res) {
         const { name, description, category, price, password  } = req.body;
-        const picture = req.file.path || null;
+        let picture = req.file || null;
 
         if(password !== process.env.ADMIN_PASSWORD) {
           res.status(404).json({ message: 'You are not allowed here!' });
@@ -26,6 +25,10 @@ module.exports = class KitchenController {
           return;
         }
 
+        if(picture !== null) {
+          picture = picture.path;
+        }
+
         const product = {
             name: name.toLowerCase(),
             description,
@@ -38,13 +41,13 @@ module.exports = class KitchenController {
 
         Product.create(product)
             .then((product) => {
-                res.status(200).json({ message: `Product successfully registered!` });
+                res.status(200).json({ message: `Product successfully registered!`, product: product });
             })
             .catch((err) => console.log(`Product register error: ${err}`));
     }
 
     static async editProduct(req, res) {
-      const productName = req.params.name;
+      const productId = parseFloat(req.params.id);
       const { name, description, category, price, avaliable, promo, password  } = req.body;
 
       if(password !== process.env.ADMIN_PASSWORD) {
@@ -52,15 +55,22 @@ module.exports = class KitchenController {
         return;
       }
 
-      const productExist = await Product.findOne({ where: { name: productName.toLowerCase() } });
+      const productExist = await Product.findOne({ where: { id: productId } });
 
       if(!productExist) {
         res.status(404).json({ message: 'Product not found' });
         return;
       }
 
+      const nameRegistered = await Product.findOne({ where: { name: name } });
+        
+      if(nameRegistered && parseFloat(nameRegistered.id) !== productId) {
+        res.status(422).json({ message: 'An product with the same name is alredy registered' });
+        return;
+      }
+
       const product = {
-        name: name.toLowerCase(),
+        name,
         description,
         category,
         avaliable,
@@ -68,7 +78,7 @@ module.exports = class KitchenController {
         promo
       }
 
-      Product.update(product, { where: { name: productName } })
+      Product.update(product, { where: { id: productId } })
         .then((product) => {
           res.status(200).json({ message: 'Product successfully updated!' });
         }).catch(err => console.log(`Product update error: ${err}`))
@@ -96,29 +106,23 @@ module.exports = class KitchenController {
     }
 
     static async orders(req, res) {
-      res.status(200).json({ message: await Kitchen.findAll({ raw: true, where: { status: false } }) });
+      res.status(200).json({ message: await Order.findAll({ raw: true, where: { delivered: false } }) });
     }
 
     static async updateOrderStatus(req, res) {
       const orderId = req.params.id;
 
-      const order = await Kitchen.findOne({ raw: true, where: { id: parseFloat(orderId) } });
+      const order = await Order.findOne({ raw: true, where: { id: parseFloat(orderId) } });
 
       if(!order) {
         res.status(404).json({ message: 'Invalid order' });
         return;
       }
 
-      Kitchen.update({ status: true }, { where: { id: parseFloat(orderId)  } })
-        .then((data) => {
-
-          Order.update({ delivered: true }, { where: { id: order.OrderId } })
-            .then(() => {
-              res.status(200).json({ message: 'You successfully finished an order' });
-            })
-            .catch(err => console.log(`Order update error: ${err}`));
-        })
-        .catch(err => console.log(`Kitchen update error: ${err}`));
+      Order.update({ delivered: true }, { where: { id: orderId } })
+      .then(() => {
+        res.status(200).json({ message: 'You successfully finished an order' });
+      }).catch(err => console.log(`Order update error: ${err}`));
     }
 
     static async getProduct(req, res) {

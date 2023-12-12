@@ -1,7 +1,6 @@
 const Customer = require('../models/Customer');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
-const Kitchen = require('../models/Kitchen');
 
 const createCustomerToken = require('../helpers/createCustomerToken');
 const getToken = require('../helpers/getToken');
@@ -46,7 +45,7 @@ module.exports = class CustomerController {
     }
 
     static async menu(req, res) {
-        res.status(200).json({ message: await Product.findAll({ raw: true }) });
+        res.status(200).json({ message: await Product.findAll({ raw: true, where: { avaliable: true } }) });
     }
 
     static async order(req, res) {
@@ -90,11 +89,7 @@ module.exports = class CustomerController {
 
         await Order.create(finalOrder)
             .then((data) => {
-                Kitchen.create({ order: products, OrderId: data.id })
-                    .then(() => {
-                        res.status(200).json({ message: 'Order successfully created' });
-                    })
-                    .catch(err => console.log(`Create kitchen order error: ${err}`));
+                res.status(200).json({ message: 'Order successfully created', order: data.products });
             })
             .catch(err => console.log(`Create order error: ${err}`));
     }
@@ -105,7 +100,7 @@ module.exports = class CustomerController {
 
         const order = await Order.findAll({ raw: true, where: { CustomerId: customer.id } });
 
-        if(!order) {
+        if(order.length <= 0) {
             res.status(200).json({ message: `You didn't order anything, you have nothing to pay nothing.` });
             return;
         }

@@ -13,7 +13,6 @@ const conn = require('./db/conn');
 
 const Order = require('./models/Order');
 const Customer = require('./models/Customer');
-const Kitchen = require('./models/Kitchen');
 const Product = require('./models/Product');
 
 // cors
