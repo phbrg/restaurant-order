@@ -118,4 +118,18 @@ module.exports = class CustomerController {
         res.status(200).json({ message: `Thank you for being our client! | Your total is: ${finalPrice}`, products: products });
         Customer.update({exitDate: new Date()}, { where: { id: customer.id } });
     }
+
+    static async userOrders(req, res) {
+        const customerToken = getToken(req);
+        const customer = await getCustomerByToken(customerToken);
+
+        const orders = await Order.findAll({ raw: true, where: { CustomerId: customer.id  } });
+
+        if(!orders || orders.length <= 0) {
+            res.status(404).json({ message: 'You have no orders' });
+            return;
+        }
+
+        res.status(200).json({ orders });
+    }
 }
