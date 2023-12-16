@@ -44,8 +44,8 @@ const Home = () => {
         error && <p className='text-white'>{error}</p>
       }
     <form onSubmit={login} className="flex flex-col gap-4 w-64">
-      <label className='pl-1 flex flex-col items-start font-medium text-white'>
-      <span>Nome</span>
+      <label className='p-1 flex flex-col items-start font-medium text-white'>
+      Nome
       <input
         type="text"
         placeholder="Digite o nome"
@@ -53,7 +53,7 @@ const Home = () => {
         onChange={(e) => setName(e.target.value)}
       />
       </label>
-      <label className='pl-1 flex flex-col items-start font-medium text-white'>
+      <label className='p-1 flex flex-col items-start font-medium text-white'>
       Mesa
       <input
         type="number"
