@@ -1,3 +1,7 @@
+import useApi from '../hooks/useApi'
+
+import { ShoppingCart } from 'lucide-react'
+
 const Menu = () => {
   const userToken = localStorage.getItem("token");
 
