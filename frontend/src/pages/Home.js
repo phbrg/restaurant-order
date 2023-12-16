@@ -28,21 +28,21 @@ const Home = () => {
         error && <p className='text-white'>{error}</p>
       }
     <form onSubmit={login} className="flex flex-col gap-4 w-64">
-      <label className='flex flex-col items-start font-medium text-white'>
+      <label className='p-1 flex flex-col items-start font-medium text-white'>
       Nome
       <input
         type="text"
         placeholder="Digite o nome"
-        className="w-full p-2 text-sm font-semibold rounded-md border-none outline-none"
+        className="w-full p-2 text-background text-sm rounded-md border-none outline-none"
         onChange={(e) => setName(e.target.value)}
       />
       </label>
-      <label className='flex flex-col items-start font-medium text-white'>
+      <label className='p-1 flex flex-col items-start font-medium text-white'>
       Mesa
       <input
-        type="text"
+        type="number"
         placeholder="Digite a mesa"
-        className="w-full p-2 text-sm font-semibold rounded-md border-none outline-none"
+        className="w-full p-2 text-background text-sm rounded-md border-none outline-none"
         onChange={(e) => setTable(e.target.value)}
       /></label>
       <input
