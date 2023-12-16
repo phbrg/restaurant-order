@@ -1,15 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const useApi = () => {
-  const [token, setToken] = useState(null);
-
-  const login = (newToken) => {
-    setToken(newToken);
-  };
+  const localToken = localStorage.getItem('token');
+  const [token, setToken] = useState(localToken);
 
   const logout = () => {
-    setToken(null);
+    setToken(() => null);
+    localStorage.removeItem('token');
   };
+
+  useEffect(() => {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    } else if (localToken) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  }, [token, localToken]);
 
   const fetchData = async (url, method = 'GET', data = null) => {
     const headers = {
@@ -17,6 +27,8 @@ const useApi = () => {
     };
 
     if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    } else if (localToken) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
@@ -34,19 +46,18 @@ const useApi = () => {
       let result = await res.json();
 
       if (!res.ok) {
-        throw new Error(`${result.message}`);
+        throw new Error(JSON.stringify({ status: res.status, message: result.message }));
       }
       
       return result;
     } catch (err) {
-      console.error('Erro na solicitação:', err);
+      console.error(`Error in request to ${url} with method ${method}:`, err);
       throw err;
     }
   };
 
   return {
     token,
-    login,
     logout,
     fetchData,
   };

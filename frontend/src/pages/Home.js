@@ -30,10 +30,11 @@ const Home = () => {
 
     try {
       const registerUser = await api.fetchData(`${url}/`, 'POST', data);
-      api.login(registerUser.token);
+      localStorage.setItem("token", registerUser.token);
       navigate('/menu');
     } catch(err) {
-      setError(err.message);
+      const message = JSON.parse(err.message)
+      setError(message.message);
     }
   }
 
@@ -43,8 +44,8 @@ const Home = () => {
         error && <p className='text-white'>{error}</p>
       }
     <form onSubmit={login} className="flex flex-col gap-4 w-64">
-      <label className='p-1 flex flex-col items-start font-medium text-white'>
-      Nome
+      <label className='pl-1 flex flex-col items-start font-medium text-white'>
+      <span>Nome</span>
       <input
         type="text"
         placeholder="Digite o nome"
@@ -52,7 +53,7 @@ const Home = () => {
         onChange={(e) => setName(e.target.value)}
       />
       </label>
-      <label className='p-1 flex flex-col items-start font-medium text-white'>
+      <label className='pl-1 flex flex-col items-start font-medium text-white'>
       Mesa
       <input
         type="number"
