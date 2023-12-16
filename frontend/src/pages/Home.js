@@ -16,16 +16,17 @@ const Home = () => {
       const registerUser = await api.fetchData(`${url}/`, 'POST', data);
       api.login(registerUser.token);
       console.log(registerUser);
+      console.log(await api.fetchData(`${url}/menu`));
     } catch(err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center bg-background">
     <form onSubmit={login} className="flex flex-col gap-4 w-64">
-      <input type="text" placeholder="Digite o nome" className="p-2 text-sm font-semibold rounded-md border-none outline-none" value={name} onChange={(e) => setName(e.target.value)} />
-      <input type="text" placeholder="Digite a mesa" className="p-2 text-sm font-semibold rounded-md border-none outline-none" value={table} onChange={(e) => setTable(e.target.value)} />
+      <input type="text" placeholder="Digite o nome" className="p-2 text-sm font-semibold rounded-md border-none outline-none" onChange={(e) => setName(e.target.value)} />
+      <input type="text" placeholder="Digite a mesa" className="p-2 text-sm font-semibold rounded-md border-none outline-none" onChange={(e) => setTable(e.target.value)} />
       <input type="submit" value="Ir pra o menu" className="p-2 text-sm w-full font-semibold bg-yellow text-white font-semibol border-none rounded-md cursor-pointer" />
     </form>
   </div>
