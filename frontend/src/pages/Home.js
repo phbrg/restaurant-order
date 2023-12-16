@@ -1,6 +1,7 @@
 import useApi from '../hooks/useApi'
 
 import { useState } from "react"
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [name, setName] = useState(null);
@@ -10,13 +11,16 @@ const Home = () => {
 
   const api = useApi();
   let url = 'http://localhost:3001'
-  const data = {name, table}
+  const data = {name, table};
+
+  const navigate = useNavigate();
 
   const login = async (e) => {
     e.preventDefault();
     try {
       const registerUser = await api.fetchData(`${url}/`, 'POST', data);
       api.login(registerUser.token);
+      navigate('/menu');
     } catch(err) {
       setError(err.message);
     }
