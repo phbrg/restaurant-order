@@ -30,17 +30,16 @@ const useApi = () => {
     }
 
     try {
-      const res = await fetch(url, config);
+      let res = await fetch(url, config);
+      let result = await res.json();
 
       if (!res.ok) {
-        throw new Error(`Erro: ${res.status}`);
+        throw new Error(`Error: ${res.status} ${result.message}`);
       }
-
-      const result = await res.json();
       
       return result;
     } catch (err) {
-      console.error('Erro na solicitação:', err.message);
+      console.error('Erro na solicitação:', err);
       throw err;
     }
   };

@@ -6,6 +6,8 @@ const Home = () => {
   const [name, setName] = useState(null);
   const [table, setTable] = useState(null);
 
+  const [error, setError] = useState(null);
+
   const api = useApi();
   let url = 'http://localhost:3001'
   const data = {name, table}
@@ -15,15 +17,16 @@ const Home = () => {
     try {
       const registerUser = await api.fetchData(`${url}/`, 'POST', data);
       api.login(registerUser.token);
-      console.log(registerUser);
-      console.log(await api.fetchData(`${url}/menu`));
     } catch(err) {
-      console.error(err);
+      setError(err.message);
     }
   }
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center bg-background">
+      {
+        error && <p className='text-white'>{error}</p>
+      }
     <form onSubmit={login} className="flex flex-col gap-4 w-64">
       <label className='flex flex-col items-start font-medium text-white'>
       Nome
