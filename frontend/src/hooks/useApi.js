@@ -34,7 +34,7 @@ const useApi = () => {
       let result = await res.json();
 
       if (!res.ok) {
-        throw new Error(`Error: ${res.status} ${result.message}`);
+        throw new Error(`${result.message}`);
       }
       
       return result;

@@ -17,6 +17,17 @@ const Home = () => {
 
   const login = async (e) => {
     e.preventDefault();
+
+    if(!name || !table) {
+      setError('Credenciais invalidas');
+      return;
+    }
+
+    if(name.length > 255) {
+      setError('Nome muito longo');
+      return;
+    }
+
     try {
       const registerUser = await api.fetchData(`${url}/`, 'POST', data);
       api.login(registerUser.token);
