@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 import pg from 'pg';
+
+dotenv.config();
 
 export const conn: Sequelize = new Sequelize({
   host: process.env.POSTGRES_HOST,
@@ -16,7 +18,7 @@ export const conn: Sequelize = new Sequelize({
   try {
     await conn.authenticate();
     console.log('> db ok...');
-  } catch (err: any) {
+  } catch (err) {
     console.log(`> db connection error: ${err}`);
   }
 })();
