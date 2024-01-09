@@ -23,4 +23,4 @@ const sequelize: Sequelize = new Sequelize({
   }
 })();
 
-export  default sequelize;
+export default sequelize;
