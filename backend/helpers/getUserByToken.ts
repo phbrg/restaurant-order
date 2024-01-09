@@ -5,7 +5,7 @@ import { Customer } from '../models/Customer';
 
 export const getUserByToken = async (token: string, req: Request, res: Response) => {
   if(!token) {
-    res.status(401).json({ error: 'Access denied' });
+    res.status(401).json({ message: 'Access denied' });
     return;
   }
   

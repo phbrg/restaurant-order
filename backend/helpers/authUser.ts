@@ -4,24 +4,23 @@ import { getToken } from './getToken';
 
 export const authUser = (req: Request, res: Response, next: NextFunction) => {
   if(!req.headers.authorization) {
-    res.status(401).json({ error: 'Access denied' });
+    res.status(401).json({ message: 'Access denied' });
     return;
   }
 
-  const token = getToken(req);
+  const token: string = getToken(req);
 
   if(!token) {
-    res.status(401).json({ error: 'Access denied' });
+    res.status(401).json({ message: 'Access denied' });
     return;
   }
 
   try {
-    const verified = jwt.verify(token, '-{^VN@5Z32;#');
-    req.user = verified;
+    req.user = jwt.verify(token, '-{^VN@5Z32;#');
 
     next();
   } catch(err) {
-    res.status(400).json({ error: 'Invalid token.' });
+    res.status(400).json({ message: 'Invalid token.'});
     return;
   }
 }
