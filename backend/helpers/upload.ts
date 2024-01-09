@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req: Request, file: MulterFile, cb: FileFilterCallback) => {
-  const allowedFileTypes = ['.png', '.jpg', '.jpeg', '.gif', '.zip'];
+  const allowedFileTypes = ['.png', '.jpg', '.jpeg'];
 
   const fileExt = path.extname(file.originalname).toLowerCase();
   if (allowedFileTypes.includes(fileExt)) {
