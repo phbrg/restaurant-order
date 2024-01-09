@@ -12,26 +12,18 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // db
-const conn = require('./db/conn');
+import conn from './db/conn';
 
-const User = require('./models/User');
-const Invite = require('./models/Invite');
-const Post = require('./models/Post');
-const Comment = require('./models/Comment');
-const Up = require('./models/Up');
+// import User from './models/User';
 
 // cors
 app.use(cors({ credentials: true, origin: `http://localhost:${port}` }));
 
 // routes
-const UserRoute = require('./routes/UserRoute');
-const UserController = require('./controllers/UserController');
+// import UserRoute from './routes/UserRoute';
+// import UserController from './controllers/UserController';
 
-const AdminRoute = require('./routes/AdminRoute');
-const AdminController = require('./controllers/AdminController');
-
-app.use('/admin', AdminRoute);
-app.use('/', UserRoute);
+// app.use('/', UserRoute);
 
 // server
 conn
