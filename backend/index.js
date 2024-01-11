@@ -13,18 +13,12 @@ app.use(cors({ credentials: true, origin: `http://localhost:${port}` }));
 const conn = require('./db/conn');
 
 const User = require('./models/User');
-const Product = require('./models/Product');
-const Sale = require('./models/Sale');
 
 // routes
 const AdminRoute = require('./routes/AdminRoute');
 const AdminController = require('./controllers/AdminController');
 
-const UserRoute = require('./routes/UserRoute');
-const UserController = require('./controllers/UserController');
-
 app.use('/admin', AdminRoute);
-app.use('/', UserRoute);
 
 // server
 conn
