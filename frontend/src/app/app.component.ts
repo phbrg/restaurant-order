@@ -10,5 +10,7 @@ import { RouterOutlet } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'frontend';
+  sendForm(): void {
+    console.log("form invited");
+  }
 }
