@@ -17,7 +17,7 @@ const fileFilter = (req, file, cb) => {
   if (allowedFileTypes.includes(fileExt)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid image extension'));
+    cb(new Error('Extensão de arquivo não aceita.'));
   }
 };
 

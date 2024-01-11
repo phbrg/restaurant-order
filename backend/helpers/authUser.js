@@ -4,14 +4,14 @@ const getToken = require('./getToken');
 
 const authUser = (req, res, next) => {
   if(!req.headers.authorization) {
-    res.status(401).json({ error: 'Access denied' });
+    res.status(401).json({ error: 'Acesso negado.' });
     return;
   }
 
   const token = getToken(req);
 
   if(!token) {
-    res.status(401).json({ error: 'Access denied' });
+    res.status(401).json({ error: 'Acesso negado.' });
     return;
   }
 
@@ -21,7 +21,7 @@ const authUser = (req, res, next) => {
 
     next();
   } catch(err) {
-    res.status(400).json({ error: 'Invalid token.' });
+    res.status(400).json({ error: 'Token invalido.' });
     return;
   }
 }
