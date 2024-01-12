@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { SendFormService } from './services/home/send-form.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ export class AppComponent {
   formGroup!: FormGroup;
 
   protected formBuilder = inject(FormBuilder);
+  protected sendFormService = inject(SendFormService);
   
   constructor() {
     this.formGroup = this.formBuilder.group({
@@ -22,7 +24,8 @@ export class AppComponent {
     });
   }
 
-  sendForm(): void {
-    console.log(this.formGroup.value);
+  submitForm(): void {
+    this.sendFormService.sendForm(this.formGroup.value)
+      .subscribe(data => console.log(data));
   }
 }
