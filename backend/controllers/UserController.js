@@ -1,4 +1,6 @@
 const createUserToken = require('../helpers/createUserToken');
+const getToken = require('../helpers/getToken');
+const getUserByToken = require('../helpers/getUserByToken');
 
 const User = require('../models/User');
 
@@ -42,5 +44,27 @@ module.exports = class UserController {
         } catch(err) { console.log(`> create user token error: ${err}`) }
       })
       .catch((err) => console.log(`> create user error: ${err}`))
+  }
+
+  static async logout(req, res) {
+    const userToken = await getToken(req) || null;
+
+    if(!userToken) {
+      res.status(422).json({ message: 'Houve um erro ao processar a sua solicitação.' });
+      return;
+    }
+
+    const user = await getUserByToken(userToken, req, res) || null;
+
+    if(!user) {
+      res.status(422).json({ message: 'Houve um erro ao processar a sua solicitação.' });
+      return;
+    }
+
+    await User.update({ exit: new Date() }, { where: { id: parseFloat(user.id) } })
+      .then(() => {
+        res.status(200).json({ message: 'Obrigado por escolher o nosso restaurante! até a proxima.' });
+        // remove token from cookies
+      }).catch((err) => console.log(`> update user error: ${err}`));
   }
 }
