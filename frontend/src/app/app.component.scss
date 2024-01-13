@@ -9,7 +9,7 @@ main {
     justify-content: center;
     background-color: $background;
     gap: 48px;
-
+    
     h1 {
         color: $yellow-mustard;
     }
@@ -19,23 +19,37 @@ main {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 24px;
 
         input {
-            padding: 6px;
+            width: 200px;
+            padding: 16px 8px; 
             border: none;
             border-radius: 4px;
 
             &:focus {
                 outline: none;
+                border: solid 1px $yellow-mustard
+            }
+
+            &::placeholder {
+                color: $dark-gray;
+            }
+
+            @media screen and (min-width: 1024px) {
+                width: 400px;
             }
         }
 
-        .submit-btn {
-            padding: 12px;
+        button {
+            width: 100%;
+            padding: 16px;
             background-color: $yellow-mustard;
             border: none;
             border-radius: 4px;
+            font-weight: 600;
+            color: $background;
+            cursor: pointer;
         }
     }
 }
