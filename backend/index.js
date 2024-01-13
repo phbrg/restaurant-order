@@ -7,7 +7,13 @@ const app = express();
 
 app.use(express.json());
 app.use(express.static('public'));
-app.use(cors({ credentials: true, origin: `http://localhost:${port}` }));
+app.use(cors({
+    // origin: `http://localhost:${port}`,
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    maxAge: 3600
+}));
 
 // database
 const conn = require('./db/conn');
