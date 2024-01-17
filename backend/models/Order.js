@@ -9,8 +9,8 @@ const Order = db.define('Order', {
       allowNull: false
     },
     status: {
-      type: DataTypes.ENUM('Preparando pedido.', 'Pedido a caminho', 'Pedido entregue'),
-      defaultValue: 'Preparando pedido.'
+      type: DataTypes.ENUM('Preparando pedido', 'Pedido a caminho', 'Pedido entregue'),
+      defaultValue: 'Preparando pedido'
     },
     total: {
       type: DataTypes.FLOAT,

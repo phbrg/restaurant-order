@@ -12,13 +12,13 @@ module.exports = class AdminController {
   static async registerAdmin(req, res) {
     const { name, login, password, confirmPassword, adminPassword } = req.body;
 
-    if(!name || !login || !password || !confirmPassword || adminPassword) {
+    if(!name || !login || !password || !confirmPassword || !adminPassword) {
       res.status(422).json({ message: 'Credenciais invalidas.' });
       return;
     }
 
     const stringRegex = /^[0-9a-zA-Z]+$/i;
-    if(!stringRegex.test(name) || stringRegex.test(login)) {
+    if(!stringRegex.test(name) || !stringRegex.test(login)) {
       res.status(422).json({ message: 'Não é permitido o uso de caracteres especiais.' });
       return;
     }
@@ -56,7 +56,10 @@ module.exports = class AdminController {
     await Admin.create(admin)
       .then((admin) => {
         createUserToken(admin, req, res);
-      }).catch((err) => console.log(`> create admin error: ${err}`));
+      }).catch((err) => { 
+        console.log(`> create admin error: ${err}`) 
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      });
   }
 
   static async createProduct(req, res) {
@@ -94,7 +97,10 @@ module.exports = class AdminController {
     await Product.create(product)
       .then((product) => {
         res.status(200).json({ message: 'Produto registrado com sucesso!', product });
-      }).catch((err) => console.log(`> create product error: ${err}`));
+      }).catch((err) => { 
+        console.log(`> create product error: ${err}`) 
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      });
   }
 
   static async editProduct(req, res) {
@@ -176,7 +182,10 @@ module.exports = class AdminController {
     await Product.update(product, { where: { id: productOnDatabase.id } })
       .then(() => {
         res.status(200).json({ message: 'Produto atualizado com sucesso.' });
-      }).catch((err) => console.log(`> product update error: ${err}`));
+      }).catch((err) => { 
+        console.log(`> product update error: ${err}`) 
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      });
   }
 
   static async editAdmin(req, res) {
@@ -245,7 +254,10 @@ module.exports = class AdminController {
     await Admin.update(admin, { where: { id: parseFloat(adminId) } })
       .then(() => {
         res.status(422).json({ message: 'Admin atualizado com sucesso.' });
-      }).catch((err) => console.log(`> Update admin error: ${err}`));
+      }).catch((err) => { 
+        console.log(`> Update admin error: ${err}`) 
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      });
   }
 
   static async deleteProduct(req, res) {
@@ -265,7 +277,10 @@ module.exports = class AdminController {
     await Product.destroy({ where: { id: parseFloat(productId) } })
       .then(() => {
         res.status(200).json({ message: 'Produto deletado com sucesso.' })
-      }).catch((err) => console.log(`> delete product error: ${err}`));
+      }).catch((err) => { 
+        console.log(`> delete product error: ${err}`) 
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      });
   }
 
   static async deleteAdmin(req, res) {
@@ -283,9 +298,9 @@ module.exports = class AdminController {
     }
 
     const adminToken = await getToken(req);
-    const response = await getUserByToken(adminToken);
+    const admin = await getUserByToken(adminToken);
 
-    if(response.admin.id == adminOnDatabase.id) {
+    if(admin.id == adminOnDatabase.id) {
       res.status(422).json({ message: 'Você não pode deletar sua propria conta.' });
       return;
     }
@@ -293,6 +308,9 @@ module.exports = class AdminController {
     await Admin.destroy({ where: { id: parseFloat(adminId) } })
       .then(() => {
         res.status(200).json({ message: 'Admin deletado com sucesso.' })
-      }).catch((err) => console.log(`> delete product error: ${err}`));
+      }).catch((err) => { 
+        console.log(`> delete product error: ${err}`)
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      });
   }
 }

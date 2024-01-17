@@ -4,6 +4,7 @@ const getUserByToken = require('../helpers/getUserByToken');
 
 const User = require('../models/User');
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 
 module.exports = class UserController {
   static async register(req, res) {
@@ -45,7 +46,10 @@ module.exports = class UserController {
           createUserToken(user, req, res);
         } catch(err) { console.log(`> create user token error: ${err}`) }
       })
-      .catch((err) => console.log(`> create user error: ${err}`))
+      .catch((err) => { 
+        console.log(`> create user error: ${err}`); 
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      })
   }
 
   static async logout(req, res) {
@@ -71,7 +75,10 @@ module.exports = class UserController {
       .then(() => {
         res.status(200).json({ message: 'Obrigado por escolher o nosso restaurante! até a proxima.' });
         // remove token from cookies
-      }).catch((err) => console.log(`> update user error: ${err}`));
+      }).catch((err) => { 
+        console.log(`> update user error: ${err}`) ;
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      });
   }
 
   static async getProducts(req, res) {
@@ -133,5 +140,37 @@ module.exports = class UserController {
     }
 
     res.status(status).json({ response });
+  }
+
+  static async registerOrder(req, res) {
+    const userToken = await getToken(req);
+    const user = await getUserByToken(userToken, req, res) || null;
+
+    if(!user) {
+      res.status(401).json({ message: 'Acesso negado.' });
+      return;
+    }
+
+    const { order } = req.body;
+
+    try {
+      for(const pedido of order) {
+        const orderOnDatabase = await Product.findOne({ raw: true, wher: { id: parseFloat(pedido.id) } }) || null;
+        if(!orderOnDatabase) {
+          throw new Error('Produto invalido.');
+        }
+      }
+    } catch(err) {
+      res.status(500).json({ message: err.message });
+      return;
+    }
+
+    await Order.create(order)
+      .then((order) => {
+        res.status(200).json({ message: 'Seu pedido foi registrado com sucesso!', order });
+      }).catch((err) => {
+        console.log(`> create order error: ${err}`);
+        res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
+      })
   }
 }
