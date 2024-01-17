@@ -1,0 +1,9 @@
+<div class="container">
+    <h1>Restaurant</h1>
+    
+    <form method="post" [formGroup]="formGroup" (ngSubmit)="submitForm()">
+        <input type="text"  placeholder="Seu Nome" formControlName="name">
+        <input type="text" placeholder="Sua Mesa (ex: 12)" formControlName="table">
+        <button type="submit">Ir para o menu</button>
+    </form>
+</div>
