@@ -1,5 +1,6 @@
 const Admin = require('../models/Admin');
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 
 const createUserToken = require('../helpers/createUserToken');
 const getToken = require('../helpers/getToken');
@@ -312,5 +313,91 @@ module.exports = class AdminController {
         console.log(`> delete product error: ${err}`)
         res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
       });
+  }
+
+  static async getOrders(req, res) {
+    let param1 = null;
+    let param2 = null;
+
+    if(req.params) {
+      param1 = req.params.param1;
+      param2 = req.params.param2;
+    }
+
+    let response;
+    let status;
+
+    switch(param1) {
+      case 'notdone':
+        response = await Order.findAll({ raw: true, where: { status: 'Preparando pedido' } }) || null;
+        status = 200;
+        break;
+      case 'awaiter':
+        response = await Order.findAll({ raw: true, where: { status: 'Pedido a caminho' } }) || null;
+        status = 200;
+        break;
+      case 'id': 
+        if(!param2) {
+          response = 'Pesquisa invalida.';
+          status = 404;
+        } else {
+          response = await Order.findAll({ raw: true, where: { id: parseFloat(param2) } }) || null;
+          status = 200;
+        }
+        break;
+      case 'user': 
+        if(!param2) {
+          response = 'Pesquisa invalida.';
+          status = 404;
+        } else {
+          response = await Order.findAll({ raw: true, where: { UserId: parseFloat(param2) } }) || null;
+          status = 200;
+        }
+        break;
+      default:
+        response = await Order.findAll({ raw: true }) || null;
+        status = 200;
+    }
+
+    if(response == [] || response.length == 0 || response == '' || response == null) {
+      response = 'Não foi possivel achar o produto que deseja.';
+      status = 404;
+    }
+
+    res.status(status).json({ response });
+  }
+
+  static async updateOrderStatus(req, res) {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    if(!orderId) {
+      res.status(422).json({ message: 'Id invalido.' });
+      return;
+    }
+
+    const orderOnDatabase = await Order.findOne({ raw: true, where: { id: parseFloat(orderId) } }) || null;
+    if(!orderOnDatabase) {
+      res.status(422).json({ message: 'Id invalido.' });
+      return;
+    }
+
+    if(!status) {
+      res.status(422).json({ message: 'Status invalido.' });
+      return;
+    }
+
+    if(status == 'Pedido a caminho' || status == 'Pedido entregue') {
+      await Order.update({ status: status }, { where: { id: parseFloat(orderId) } })
+        .then(() => {
+          res.status(200).json({ message: 'Pedido atualizado com sucesso.' });
+        }).catch((err) => {
+          console.log(`> update order status error: ${err}`);
+          res.status(500).json({ message: 'Ocorreu um erro interno, tente novamente mais tarde.' });
+        });
+    } else {
+      res.status(422).json({ message: 'Status invalido.' });
+      return;
+    }
   }
 }
