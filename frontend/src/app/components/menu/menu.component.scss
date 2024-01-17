@@ -1,0 +1,20 @@
+@use 'colors' as *;
+
+.container {
+    padding: 4px;
+    
+    header {
+        display: flex;
+        justify-content: space-between;
+        padding: 18px;
+        border-bottom: solid 1px $light-gray;
+        
+        span {
+            color: $yellow-mustard;
+        }
+        
+        i {
+            cursor: pointer;
+        }
+    }
+}
