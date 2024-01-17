@@ -1,12 +1,12 @@
 @use 'colors' as *;
 
 .container {
-    padding: 4px;
+    padding: 18px;
     
     header {
         display: flex;
         justify-content: space-between;
-        padding: 18px;
+        padding: 6px;
         border-bottom: solid 1px $light-gray;
         
         span {
@@ -16,5 +16,11 @@
         i {
             cursor: pointer;
         }
+    }
+
+    .cards-container {
+        padding: 24px;
+        display: flex;
+        gap: 12px;
     }
 }
