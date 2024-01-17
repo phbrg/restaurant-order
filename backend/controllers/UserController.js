@@ -66,7 +66,6 @@ module.exports = class UserController {
       res.status(422).json({ message: 'Houve um erro ao processar a sua solicitação.' });
       return;
     } else if(user.isAdmin) {
-      console.log('> caiu aqui');
       // remove token from cookies
       return;
     }
@@ -153,11 +152,24 @@ module.exports = class UserController {
 
     const { order } = req.body;
 
+    if(!order) {
+      res.status(422).json({ message: 'Pedido invalido.' });
+      return;
+    }
+
+    let total = 0;
+
     try {
       for(const pedido of order) {
-        const orderOnDatabase = await Product.findOne({ raw: true, wher: { id: parseFloat(pedido.id) } }) || null;
+        const orderOnDatabase = await Product.findOne({ raw: true, where: { id: parseFloat(pedido.id) } }) || null;
         if(!orderOnDatabase) {
           throw new Error('Produto invalido.');
+        }
+
+        if(orderOnDatabase.promotion) {
+          total += orderOnDatabase.promotion;
+        } else {
+          total += orderOnDatabase.price;
         }
       }
     } catch(err) {
@@ -165,7 +177,7 @@ module.exports = class UserController {
       return;
     }
 
-    await Order.create(order)
+    await Order.create({ order, total, UserId: parseFloat(user.id) })
       .then((order) => {
         res.status(200).json({ message: 'Seu pedido foi registrado com sucesso!', order });
       }).catch((err) => {
