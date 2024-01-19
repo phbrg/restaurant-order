@@ -400,4 +400,8 @@ module.exports = class AdminController {
       return;
     }
   }
+
+  static async getUserOrders(req, res) {
+    
+  }
 }

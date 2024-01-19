@@ -70,9 +70,22 @@ module.exports = class UserController {
       return;
     }
 
+    const userOrders = await Order.findAll({ raw: true, where: { UserId: user.id } }) || null;
+    let total = 0;
+
+    if(userOrders && userOrders.length > 0) {
+      for(const order of userOrders) {
+        total += order.total; 
+      }
+    }
+
     await User.update({ exit: new Date() }, { where: { id: parseFloat(user.id) } })
       .then(() => {
-        res.status(200).json({ message: 'Obrigado por escolher o nosso restaurante! até a proxima.' });
+        if(total > 0) {
+          res.status(200).json({ message: `Obrigado por escolher o nosso restaurante! realize o pagamento de: ${total}.` });
+        } else {
+          res.status(200).json({ message: `Obrigado por escolher o nosso restaurante! você não consumiu nada.` });
+        }
         // remove token from cookies
       }).catch((err) => { 
         console.log(`> update user error: ${err}`) ;
