@@ -1,0 +1,51 @@
+@use 'colors' as *;
+
+.card-container {
+    width: 180px;
+    height: 270px;
+    padding: 6px;
+    background-color: $light-gray;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    img {
+        width: 100%;
+        height: 40%;
+        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+    }
+
+    .title-container {
+        display: flex;
+        justify-content: space-between;
+
+        h3 {
+            color: $yellow-mustard;
+        }
+
+        .price {
+            display: flex;
+            align-items: center;
+        }
+    }  
+
+    p {
+        font-size: small;
+        font-weight: 500;
+    }
+
+    button {
+        color: $background;
+        padding: 6px;
+        background-color: $yellow-mustard;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+}
