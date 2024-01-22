@@ -14,8 +14,12 @@ const createUserToken = (user, req, res) => {
     isAdmin: isAdmin
   }, process.env.JWT_KEY);
 
-  // remove token ( send to cookies )
-  res.status(200).json({ message: 'Seja bem vindo!', token: token});
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: true,
+  });
+  
+  res.status(200).json({ message: 'Seja bem vindo!' });
 }
 
 module.exports = createUserToken;
