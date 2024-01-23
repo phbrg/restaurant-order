@@ -66,7 +66,7 @@ module.exports = class UserController {
       res.status(422).json({ message: 'Houve um erro ao processar a sua solicitação.' });
       return;
     } else if(user.isAdmin) {
-      // remove token from cookies
+      res.clearCookie('token').status(200).json({ message: 'Você fez logout da sua conta com sucesso.' });
       return;
     }
 
@@ -81,12 +81,13 @@ module.exports = class UserController {
 
     await User.update({ exit: new Date() }, { where: { id: parseFloat(user.id) } })
       .then(() => {
+        res.clearCookie('token');
+
         if(total > 0) {
           res.status(200).json({ message: `Obrigado por escolher o nosso restaurante! realize o pagamento de: ${total}.` });
         } else {
           res.status(200).json({ message: `Obrigado por escolher o nosso restaurante! você não consumiu nada.` });
         }
-        // remove token from cookies
       }).catch((err) => { 
         console.log(`> update user error: ${err}`) ;
         res.status(500).json({ message: 'Erro interno, tente novamente mais tarde.' });
