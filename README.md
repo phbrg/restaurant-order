@@ -1,4 +1,4 @@
-# Restaurant manager
+# Restaurant order
 > This is a full-stack web application designed to address restaurant management challenges. In this app, users can conveniently place their food orders using their phones, reducing wrong orders and and facilitating workflow.
 
 ## Developers
